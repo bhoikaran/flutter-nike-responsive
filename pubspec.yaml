@@ -60,6 +60,10 @@ flutter:
   assets:
     - assets/nike_air_max_90.png
     - assets/nike_air_max_90_1.png
+    - assets/AIR_MAX_90_SP_bg_remove.png
+    - assets/AIR_MAX_90_SP_bg_remove_1.png
+    - assets/360.png
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
