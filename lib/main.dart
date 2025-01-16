@@ -177,11 +177,26 @@ class ProductScreenBottomPart extends StatefulWidget {
 
 class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
   bool isExpended = false;
-
+  int currentSizeIndex = 0;
+  int currentColorIndex = 0;
   void _expend() {
     setState(() {
       isExpended = !isExpended;
     });
+  }
+
+  List<Widget> colorSelector() {
+    List<Widget> colorItemList = [];
+
+    for (var i = 0; i < colors.length; i++) {
+      colorItemList
+          .add(colorItem(colors[i], i == currentColorIndex, context, () {
+        setState(() {
+          currentColorIndex = i;
+        });
+      }));
+    }
+    return colorItemList;
   }
 
   @override
@@ -274,9 +289,208 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
                 ),
               ],
             ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: screenAwareSize(20.0, context),
+              right: screenAwareSize(20.0, context),
+            ),
+            child: Row(
+                // children: [
+                // SizedBox(
+                //   height: screenAwareSize(35, context),
+                //   child: Row(
+                //   children: sizeNumList.map(item){
+                //   var index = sizeNumList.indexOf(item);
+                //   return GestureDetector(onTap: (){
+                //     setState((){
+                //       currentSizeIndex = index;
+                //     },);
+                //   },);
+                //    child : sizeItem(item,index = currentSizeIndex, context);
+                // },
+                //       ),
+                // )
+                // ],
+
+                ),
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: screenAwareSize(18, context),
+            ),
+            child: Text(
+              "Select Color",
+              style: TextStyle(
+                  color: Color(0xff949598),
+                  fontSize: screenAwareSize(10, context),
+                  fontFamily: "Montserrat-SemiBold"),
+            ),
+          ),
+          SizedBox(
+            height: screenAwareSize(7, context),
+          ),
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(
+              left: screenAwareSize(20, context),
+            ),
+            height: screenAwareSize(34, context),
+            child: Row(
+              children: colorSelector(),
+            ),
+          ),
+          SizedBox(
+            height: screenAwareSize(7, context),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: screenAwareSize(18, context),
+            ),
+            child: Text(
+              "Price",
+              style: TextStyle(
+                  color: Color(0xff949598), fontFamily: "Montserrat-SemiBold"),
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: screenAwareSize(100, context),
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(left: screenAwareSize(22, context)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: screenAwareSize(18, context)),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "₹",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: screenAwareSize(26, context),
+                                  fontFamily: "Montserrat-Medium"),
+                            ),
+                            SizedBox(
+                              width: screenAwareSize(2.0, context),
+                            ),
+                            Text(
+                              "15450",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: screenAwareSize(30, context),
+                                  fontFamily: "Montserrat-Medium"),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenAwareSize(8, context),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: screenAwareSize(18, context)),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: MaterialButton(
+                            onPressed: () {},
+                            color: Color.fromARGB(255, 251, 251, 47),
+                            padding: EdgeInsets.symmetric(
+                              vertical: screenAwareSize(14, context),
+                            ),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Add To Cart",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: screenAwareSize(15.0, context)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),
     );
   }
+}
+
+Widget colorItem(
+    Color color, bool isSelect, BuildContext context, VoidCallback _onTab) {
+  return GestureDetector(
+    onTap: _onTab,
+    child: Padding(
+      padding: EdgeInsets.only(
+        left: screenAwareSize(10, context),
+      ),
+      child: Container(
+        width: screenAwareSize(30, context),
+        height: screenAwareSize(30, context),
+        decoration: BoxDecoration(
+            color: Color.fromARGB(201, 241, 15, 19),
+            borderRadius: BorderRadius.circular(5.0),
+            boxShadow: isSelect
+                ? [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(.8),
+                        blurRadius: 10.0,
+                        offset: Offset(0, 10))
+                  ]
+                : []),
+        child: ClipPath(
+          clipper: Clipper(),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: color,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+class Clipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0.0, size.height);
+    path.lineTo(size.width * 0.2, size.height);
+    path.lineTo(size.width, size.height * 0.2);
+    path.lineTo(size.width, 0.0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+Widget devider() {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
+    child: Container(
+      width: 0.8,
+      color: Colors.black,
+    ),
+  );
 }
