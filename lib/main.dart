@@ -87,12 +87,13 @@ class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
       child: Stack(
         children: <Widget>[
           Stack(
+            alignment: Alignment.center,
             children: <Widget>[
               Container(
                 height: 300,
                 width: 500,
                 child: Image.asset(
-                  'assets/AIR_MAX_90_SP_bg_remove.png',
+                  'assets/AIR_MAX_90_SP_bg_remove_3.png',
                   fit: BoxFit.contain,
                 ),
               ),
@@ -179,6 +180,23 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
   bool isExpended = false;
   int currentSizeIndex = 0;
   int currentColorIndex = 0;
+  int _counter = 0;
+
+  void _decrease() {
+    setState(() {
+      if (_counter >0) {
+         _counter--;
+      }
+     
+    });
+  }
+
+  void _increase() {
+    setState(() {
+      _counter++;
+    });
+  }
+
   void _expend() {
     setState(() {
       isExpended = !isExpended;
@@ -295,25 +313,91 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
               left: screenAwareSize(20.0, context),
               right: screenAwareSize(20.0, context),
             ),
-            child: Row(
-                // children: [
-                // SizedBox(
-                //   height: screenAwareSize(35, context),
-                //   child: Row(
-                //   children: sizeNumList.map(item){
-                //   var index = sizeNumList.indexOf(item);
-                //   return GestureDetector(onTap: (){
-                //     setState((){
-                //       currentSizeIndex = index;
-                //     },);
-                //   },);
-                //    child : sizeItem(item,index = currentSizeIndex, context);
-                // },
-                //       ),
-                // )
-                // ],
-
+            child: Row(children: <Widget>[
+              SizedBox(
+                  height: screenAwareSize(35, context),
+                  child: Row(
+                      children: sizeNumList.map((item) {
+                    var index = sizeNumList.indexOf(item);
+                    return GestureDetector(
+                      onTap: () {
+                        setState(
+                          () {
+                            currentSizeIndex = index;
+                          },
+                        );
+                      },
+                      child: sizeItem(item, index == currentSizeIndex, context),
+                    );
+                  }).toList())),
+              Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Container(
+                  width: screenAwareSize(96, context),
+                  height: screenAwareSize(30, context),
+                  decoration: BoxDecoration(
+                    color: Color(0xff525663),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Flexible(
+                          flex: 3,
+                          child: GestureDetector(
+                            onTap: _decrease,
+                            child: SizedBox(
+                              height: double.infinity,
+                              child: Center(
+                                child: Text(
+                                  "-",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.0,
+                                      fontFamily: "Montserrat-Bold"),
+                                ),
+                              ),
+                            ),
+                          )),
+                      devider(),
+                      Flexible(
+                        flex: 3,
+                        child: SizedBox(
+                          height: double.infinity,
+                          child: Center(
+                            child: Text(
+                              _counter.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  fontFamily: "Montserrat-Bold"),
+                            ),
+                          ),
+                        ),
+                      ),
+                      devider(),
+                      Flexible(
+                          flex: 3,
+                          child: GestureDetector(
+                            onTap: _increase,
+                            child: SizedBox(
+                              height: double.infinity,
+                              child: Center(
+                                child: Text(
+                                  "+",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.0,
+                                      fontFamily: "Montserrat-Bold"),
+                                ),
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
                 ),
+              )
+            ]),
           ),
           SizedBox(
             height: 8.0,
@@ -405,7 +489,7 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
                             onPressed: () {},
                             color: Color.fromARGB(255, 251, 251, 47),
                             padding: EdgeInsets.symmetric(
-                              vertical: screenAwareSize(14, context),
+                              vertical: screenAwareSize(12, context),
                             ),
                             child: Align(
                               alignment: Alignment.center,
@@ -414,7 +498,8 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: screenAwareSize(15.0, context)),
+                                    fontSize: screenAwareSize(12.0, context),
+                                    fontFamily: "Montserrat-Bold"),
                               ),
                             ),
                           ),
@@ -430,6 +515,34 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
       ),
     );
   }
+}
+
+Widget sizeItem(String size, bool isSelected, BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.only(left: 12.0),
+    child: Container(
+      width: screenAwareSize(30, context),
+      height: screenAwareSize(30, context),
+      decoration: BoxDecoration(
+          color: isSelected
+              ? Color.fromARGB(255, 48, 251, 136)
+              : Color(0xff525663),
+          borderRadius: BorderRadius.circular(5.2),
+          boxShadow: [
+            BoxShadow(
+                color:
+                    isSelected ? Colors.black.withOpacity(0.5) : Colors.black12,
+                offset: Offset(0, 10),
+                blurRadius: 10.0),
+          ]),
+      child: Center(
+        child: Text(
+          size,
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    ),
+  );
 }
 
 Widget colorItem(
@@ -487,7 +600,7 @@ class Clipper extends CustomClipper<Path> {
 
 Widget devider() {
   return Padding(
-    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
+    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
     child: Container(
       width: 0.8,
       color: Colors.black,
